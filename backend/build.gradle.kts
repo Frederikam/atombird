@@ -11,6 +11,8 @@ group = "com.frederikam"
 version = "0.0.1"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
+val commonsValidatorVersion = "1.6"
+
 repositories {
     mavenCentral()
     maven { url = uri("https://repo.spring.io/milestone") }
@@ -24,7 +26,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-    implementation("com.google.code.gson:gson:2.8.5")
+    implementation("com.google.code.gson:gson")
+    implementation("commons-validator:commons-validator:$commonsValidatorVersion")
     runtimeOnly("io.r2dbc:r2dbc-postgresql")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
