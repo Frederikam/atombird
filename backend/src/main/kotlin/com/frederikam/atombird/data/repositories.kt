@@ -13,9 +13,9 @@ interface TokenRepository : ReactiveCrudRepository<Token, String>
 class Account(
         @Id val email: String,
         val salt: String,
-        var hash: String,
-        @Transient var new: Boolean = false
+        var hash: String
 ) : Persistable<String> {
+    @Transient var new = false
     override fun getId() = email
     override fun isNew() = new
 }

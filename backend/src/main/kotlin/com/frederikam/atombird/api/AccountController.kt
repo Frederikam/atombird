@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
 import java.security.SecureRandom
-import java.security.spec.InvalidKeySpecException
-import java.security.NoSuchAlgorithmException
 import java.util.*
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.SecretKeyFactory
@@ -33,6 +31,7 @@ class AccountController(val accounts: AccountRepository, val tokens: TokenReposi
     val random = SecureRandom()
 
     data class RegisterRequest(val email: String, val password: String)
+    data class LoginRequest(val email: String, val password: String)
 
     @PostMapping("/register")
     fun register(@RequestBody body: RegisterRequest): Mono<Token> {
@@ -43,7 +42,7 @@ class AccountController(val accounts: AccountRepository, val tokens: TokenReposi
         val account = Account(body.email, salt, hash)
         account.new = true
 
-        if(!EmailValidator.getInstance(false, false).isValid(body.email))
+        if (!EmailValidator.getInstance(false, false).isValid(body.email))
             throw InvalidEmailException()
         if (body.password.length < 8)
             throw PasswordTooShortException()
@@ -53,11 +52,19 @@ class AccountController(val accounts: AccountRepository, val tokens: TokenReposi
                 .then(accounts.save(account))
                 .flatMap {
                     log.info("New user account: {}", it.email)
-                    newTokenResponse(it)
+                    assignNewToken(it)
                 }
     }
 
-    fun newTokenResponse(account: Account): Mono<Token> {
+    @PostMapping("/login")
+    fun login(@RequestBody body: LoginRequest) = accounts
+            .findById(body.email)
+            .flatMap {
+                if (hashPassword(body.password, it.salt) != it.hash) throw InvalidCredentialsException()
+                assignNewToken(it)
+            }
+
+    fun assignNewToken(account: Account): Mono<Token> {
         val token = ByteArray(tokenLength)
                 .apply { random.nextBytes(this) }
                 .run { Base64.getEncoder().encodeToString(this) }
@@ -74,8 +81,13 @@ class AccountController(val accounts: AccountRepository, val tokens: TokenReposi
 
     class AccountAlreadyRegisteredException() :
             ResponseStatusException(HttpStatus.BAD_REQUEST, "This account is already registered")
+
     class InvalidEmailException() :
             ResponseStatusException(HttpStatus.BAD_REQUEST, "The given email is invalid.")
+
     class PasswordTooShortException() :
             ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must at least be 8 characters.")
+
+    class InvalidCredentialsException() :
+            ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid credentials.")
 }
