@@ -2,7 +2,8 @@ package com.frederikam.atombird.api
 
 import com.frederikam.atombird.data.Account
 import com.frederikam.atombird.data.AccountRepository
-import com.sun.el.parser.Token
+import com.frederikam.atombird.data.Token
+import com.frederikam.atombird.data.TokenRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -24,20 +25,20 @@ import javax.crypto.SecretKeyFactory
 
 
 @RestController
-class AccountController(val accounts: AccountRepository) {
+class AccountController(val accounts: AccountRepository, val tokens: TokenRepository) {
 
     private val log: Logger = LoggerFactory.getLogger(AccountController::class.java)
 
     val hashKeyLength = 256
     val hashIterations = 32
     val saltLength = 64
+    val tokenLength = 128
     val random = SecureRandom()
 
     data class RegisterRequest(val email: String, val password: String)
-    data class TokenResponse(val token: String)
 
     @PostMapping("/register")
-    fun register(@RequestBody body: RegisterRequest): Mono<TokenResponse> {
+    fun register(@RequestBody body: RegisterRequest): Mono<Token> {
         val salt = ByteArray(saltLength)
                 .apply { random.nextBytes(this) }
                 .run { Base64.getEncoder().encodeToString(this) }
@@ -56,9 +57,11 @@ class AccountController(val accounts: AccountRepository) {
                 }
     }
 
-    fun newTokenResponse(account: Account): Mono<TokenResponse> {
-        // TODO
-        return Mono.just(TokenResponse("token"))
+    fun newTokenResponse(account: Account): Mono<Token> {
+        val token = ByteArray(tokenLength)
+                .apply { random.nextBytes(this) }
+                .run { Base64.getEncoder().encodeToString(this) }
+        return tokens.save(Token(token, account.email))
     }
 
     fun hashPassword(password: String, salt: String): String {
