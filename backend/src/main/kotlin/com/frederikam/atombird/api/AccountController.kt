@@ -8,9 +8,7 @@ import org.apache.commons.validator.routines.EmailValidator
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
 import java.security.SecureRandom
