@@ -13,12 +13,15 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 
 val commonsValidatorVersion = "1.6"
 val romeVersion = "1.12.1"
-val kotlinReactorExtensionsVerion = "1.0.0.M1"
+val kotlinReactorExtensionsVersion = "1.0.0.M1"
+val fuelVersion = "2.2.1"
 
 repositories {
     mavenCentral()
+
     maven { url = uri("https://repo.spring.io/milestone") }
     maven { url = uri("https://repo.spring.io/snapshot") }
+    maven { url = uri("https://dl.bintray.com/kittinunf/maven") }
 }
 
 dependencies {
@@ -31,7 +34,9 @@ dependencies {
     implementation("com.google.code.gson:gson")
     implementation("commons-validator:commons-validator:$commonsValidatorVersion")
     implementation("com.rometools:rome:$romeVersion")
-    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:$kotlinReactorExtensionsVerion")
+    implementation("com.github.kittinunf.fuel:fuel:$fuelVersion")
+    implementation("com.github.kittinunf.fuel:fuel-reactor:$fuelVersion")
+    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:$kotlinReactorExtensionsVersion")
     runtimeOnly("io.r2dbc:r2dbc-postgresql")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
