@@ -1,6 +1,7 @@
 package com.frederikam.atombird.data
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.frederikam.atombird.api.AccountController
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.Transient
 import org.springframework.data.domain.Persistable
@@ -11,11 +12,19 @@ import reactor.core.publisher.Mono
 import java.nio.ByteBuffer
 import java.time.Instant
 
+val authFailMono = Mono.error<Account>(AccountController.InvalidCredentialsException())
+
 interface AccountRepository : ReactiveCrudRepository<Account, String> {
+
     @Query("SELECT * FROM account WHERE email LIKE (SELECT email FROM token WHERE token.token LIKE :token)")
     fun findByToken(token: String): Mono<Account>
+
+    /** Throws exception if token is invalid */
+    fun findByTokenOrThrow(token: String) = findByToken(token).switchIfEmpty(authFailMono)
 }
 interface TokenRepository : ReactiveCrudRepository<Token, String>
+interface FeedRepository : ReactiveCrudRepository<Feed, String>
+interface EntryRepository : ReactiveCrudRepository<Entry, String>
 
 @Component
 class Repositories(accounts: AccountRepository, tokens: TokenRepository)
@@ -39,7 +48,7 @@ class Token(
 }
 
 class Feed(
-        @Id var id: Long,
+        @Id var id: Long?,
         /** URL of the feed */
         val url: String,
         /** The owner's email */
@@ -53,7 +62,7 @@ class Feed(
 )
 
 class Entry(
-        @Id var id: Long,
+        @Id var id: Long?,
         val nativeId: String,
         val time: Instant?,
         val url: String?,

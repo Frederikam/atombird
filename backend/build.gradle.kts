@@ -12,6 +12,8 @@ version = "0.0.1"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 val commonsValidatorVersion = "1.6"
+val romeVersion = "1.12.1"
+val kotlinReactorExtensionsVerion = "1.0.0.M1"
 
 repositories {
     mavenCentral()
@@ -28,6 +30,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("com.google.code.gson:gson")
     implementation("commons-validator:commons-validator:$commonsValidatorVersion")
+    implementation("com.rometools:rome:$romeVersion")
+    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions:$kotlinReactorExtensionsVerion")
     runtimeOnly("io.r2dbc:r2dbc-postgresql")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
