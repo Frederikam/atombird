@@ -19,9 +19,11 @@ interface AccountRepository : ReactiveCrudRepository<Account, String> {
     @Query("SELECT * FROM account WHERE email LIKE (SELECT email FROM token WHERE token.token LIKE :token)")
     fun findByToken(token: String): Mono<Account>
 
-    /** Throws exception if token is invalid */
-    fun findByTokenOrThrow(token: String) = findByToken(token).switchIfEmpty(authFailMono)
 }
+
+/** Throws exception if token is invalid */
+fun AccountRepository.findByTokenOrThrow(token: String) = findByToken(token).switchIfEmpty(authFailMono)
+
 interface TokenRepository : ReactiveCrudRepository<Token, String>
 interface FeedRepository : ReactiveCrudRepository<Feed, String>
 interface EntryRepository : ReactiveCrudRepository<Entry, String>
@@ -34,7 +36,9 @@ class Account(
         val salt: String,
         var hash: String
 ) : Persistable<String> {
-    @Transient var new = false
+    @Transient
+    var new = false
+
     override fun getId() = email
     override fun isNew() = new
 }
@@ -43,8 +47,11 @@ class Token(
         @Id val token: String,
         private val email: String
 ) : Persistable<String> {
-    @JsonIgnore override fun getId() = email
-    @JsonIgnore override fun isNew() = true
+    @JsonIgnore
+    override fun getId() = email
+
+    @JsonIgnore
+    override fun isNew() = true
 }
 
 class Feed(
@@ -52,13 +59,18 @@ class Feed(
         /** URL of the feed */
         val url: String,
         /** The owner's email */
-        val user: String,
+        @JsonIgnore
+        val userId: String,
         var title: String,
         var uiLink: String?,
         var description: String?,
         val tags: Array<String>,
+        @JsonIgnore
         var lastChecked: Instant,
-        var readAfter: Instant
+        @JsonIgnore
+        var checkAfter: Instant,
+        /** Less time to spend on parsing */
+        var etag: String?
 )
 
 class Entry(
