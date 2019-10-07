@@ -13,7 +13,9 @@
     "build-prod": "webpack -p --mode production"
   },
   "dependencies": {
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
