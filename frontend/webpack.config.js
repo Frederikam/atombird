@@ -36,7 +36,7 @@ const config = {
                 ]
             },
             {
-                test: /\.s[ac]ss$/i,
+                test: /\.[sc][ac]?ss$/i, // CSS, SASS, and SCSS
                 use: [
                     // Creates `style` nodes from JS strings
                     'style-loader',
