@@ -31,7 +31,7 @@ class AccountController(val accounts: AccountRepository, val tokens: TokenReposi
     data class RegisterRequest(val email: String, val password: String)
     data class LoginRequest(val email: String, val password: String)
 
-    @PostMapping("/register")
+    @PostMapping("/account/register")
     fun register(@RequestBody body: RegisterRequest): Mono<Token> {
         val salt = ByteArray(saltLength)
                 .apply { random.nextBytes(this) }
@@ -54,7 +54,7 @@ class AccountController(val accounts: AccountRepository, val tokens: TokenReposi
                 }
     }
 
-    @PostMapping("/login")
+    @PostMapping("/account/login")
     fun login(@RequestBody body: LoginRequest) = accounts
             .findById(body.email)
             .flatMap {
