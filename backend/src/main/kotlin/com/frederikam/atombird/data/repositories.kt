@@ -15,10 +15,8 @@ import java.time.Instant
 val authFailMono = Mono.error<Account>(AccountController.InvalidCredentialsException())
 
 interface AccountRepository : ReactiveCrudRepository<Account, String> {
-
     @Query("SELECT * FROM account WHERE email LIKE (SELECT email FROM token WHERE token.token LIKE :token)")
     fun findByToken(token: String): Mono<Account>
-
 }
 
 /** Throws exception if token is invalid */

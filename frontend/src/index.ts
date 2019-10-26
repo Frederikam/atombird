@@ -1,15 +1,13 @@
 import {html, render} from 'lit-html';
 import layout from './layout';
-import login from './pages/login';
+import index from './pages/index';
 import 'normalize.css'
-const Navigo = require('navigo');
+import globals from "./globals"
 
-const router = new Navigo();
-
-router.on("/login", () => {
-    render(layout(login(true)), document.body);
-}).on("/register", () => {
-    render(layout(login(false)), document.body);
+globals.router.on("/", () => {
+    render(layout(index(true)), document.body);
+}).on("/login", () => {
+    render(layout(index(false)), document.body);
 }).notFound(() => {
     // @ts-ignore
     render(layout("Nothing's here"), document.body);

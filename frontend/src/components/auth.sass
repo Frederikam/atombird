@@ -1,0 +1,56 @@
+#auth-box-outer
+  display: flex
+  flex-direction: column
+  flex-wrap: nowrap
+  align-items: center
+
+#auth-box
+  max-width: 500px
+  min-width: 400px
+  padding: 32px
+  border: black solid 2px
+  border-radius: 6px
+  form
+    align-content: center
+
+.auth-header
+  text-align: center
+  margin: 0
+  font-size: 24px
+
+.auth-input
+  display: block
+  padding: 12px 20px
+  width: calc(100% - 44px)
+  margin: 32px 0
+  border: #333 solid 2px
+  border-radius: 4px
+  background-color: #eee
+  transition: border-color 400ms
+  font-size: 20px
+
+.auth-input:focus
+  border-color: dodgerblue
+
+.auth-submit
+  padding: 12px 20px
+  width: calc(50%)
+  margin: 16px auto 0 auto
+  display: block
+  color: white
+  background-color: #28A745
+  font-size: 20px
+  border-radius: 9px
+  border: #333 solid 1px
+  transition: background-color 400ms
+  cursor: pointer
+
+.auth-submit:hover
+  background-color: #1f7f35
+
+.auth-switch
+  display: inline-block
+  margin: 8px
+  color: dodgerblue
+  text-decoration: underline
+  cursor: pointer
