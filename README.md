@@ -17,7 +17,7 @@ Aims to be an online RSS and Atom feed reader.
 * Spring Boot – Dependency injection and automatic configuration.
 * Spring Webflux – Reactive API endpoints.
 * R2DBC and Spring Data – Reactive data access.
-* ROME – For parsing feeds.
+* Rome – For parsing feeds.
 
 ### Frontend
 * Typescript – Like JavaScript but optionally typed.
