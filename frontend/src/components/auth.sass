@@ -5,8 +5,7 @@
   align-items: center
 
 #auth-box
-  max-width: 500px
-  min-width: 400px
+  width: 400px
   padding: 32px
   border: black solid 2px
   border-radius: 6px
@@ -18,21 +17,26 @@
   margin: 0
   font-size: 24px
 
-.auth-input
+#auth-email,#auth-password
   display: block
   padding: 12px 20px
   width: calc(100% - 44px)
-  margin: 32px 0
+  margin: 16px 0
   border: #333 solid 2px
   border-radius: 4px
   background-color: #eee
   transition: border-color 400ms
   font-size: 20px
 
-.auth-input:focus
+#auth-email:focus,#auth-password:focus
   border-color: dodgerblue
 
-.auth-submit
+#auth-error
+  color: red
+  font-size: 20px
+  display: block
+
+#auth-submit
   padding: 12px 20px
   width: calc(50%)
   margin: 16px auto 0 auto
@@ -45,8 +49,11 @@
   transition: background-color 400ms
   cursor: pointer
 
-.auth-submit:hover
+#auth-submit:focus
   background-color: #1f7f35
+
+#auth-submit[disabled]
+  background-color: #26452c
 
 .auth-switch
   display: inline-block
