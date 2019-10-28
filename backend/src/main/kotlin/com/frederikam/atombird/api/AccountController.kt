@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.switchIfEmpty
 import java.security.SecureRandom
 import java.util.*
 import javax.crypto.spec.PBEKeySpec
@@ -30,6 +31,14 @@ class AccountController(val accounts: AccountRepository, val tokens: TokenReposi
 
     data class RegisterRequest(val email: String, val password: String)
     data class LoginRequest(val email: String, val password: String)
+    data class AccountStatus(val email: String)
+
+    @GetMapping("/account/status")
+    fun status(@RequestHeader authorization: String): Mono<AccountStatus> {
+        return accounts.findByToken(authorization)
+                .map { AccountStatus(it.email) }
+                .switchIfEmpty { Mono.error(InvalidCredentialsException()) }
+    }
 
     @PostMapping("/account/register")
     fun register(@RequestBody body: RegisterRequest): Mono<Token> {
