@@ -6,5 +6,6 @@ export default {
     router: new Navigo(),
     apiBaseUrl: apiBaseUrl,
     accountRegisterUrl: apiBaseUrl + "account/register",
-    accountLoginUrl: apiBaseUrl + "account/login"
+    accountLoginUrl: apiBaseUrl + "account/login",
+    accountStatusUrl: apiBaseUrl + "account/status",
 }

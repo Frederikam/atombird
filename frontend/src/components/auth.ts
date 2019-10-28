@@ -1,6 +1,6 @@
 import {html} from 'lit-html';
 import globals from "../globals";
-import axios from 'axios'
+import axios from 'axios';
 import Util from "../Util";
 import './auth.sass'
 
