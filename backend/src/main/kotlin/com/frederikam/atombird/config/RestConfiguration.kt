@@ -10,6 +10,7 @@ import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import org.springframework.web.reactive.HandlerMapping
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping
+import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter
 
 
 @Configuration
@@ -36,6 +37,10 @@ class RestConfiguration {
         val mapping = SimpleUrlHandlerMapping()
         mapping.urlMap = mapOf("/websocket" to handler)
         return mapping
+    }
 
+    @Bean
+    fun wsHandlerAdapter(): WebSocketHandlerAdapter {
+        return WebSocketHandlerAdapter()
     }
 }
