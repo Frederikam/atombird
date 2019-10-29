@@ -1,7 +1,7 @@
 import {html, TemplateResult} from 'lit-html';
 import './layout.sass'
 
-export default (body: TemplateResult) => html`
+export default (body: TemplateResult | string | null) => html`
 <div id="inner-body">
     <header>
         <h1 id="title">Atombird</h1>

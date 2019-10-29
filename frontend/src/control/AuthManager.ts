@@ -15,6 +15,7 @@ const LOGGED_OUT_STATUS = new AccountStatus(false, null);
 
 class AuthManager {
     private cachedStatus: AccountStatus | null = null;
+    private statusKnown = false;
 
     /**
      * Determines the account status and returns it via the given callback.
@@ -29,14 +30,16 @@ class AuthManager {
         let token = localStorage.getItem("token");
 
         if (token == null) {
+            this.statusKnown = true;
             callback(LOGGED_OUT_STATUS);
             return;
         }
 
-        axios.post(globals.accountStatusUrl, null, {
+        axios.get(globals.accountStatusUrl, {
             headers: {Authorization: token}
         }).then(res => {
             this.cachedStatus = new AccountStatus(true, res.data.email);
+            this.statusKnown = true;
             callback(this.cachedStatus);
         }).catch(error => {
             console.log(error);
@@ -44,6 +47,7 @@ class AuthManager {
                 localStorage.removeItem("token");
                 this.cachedStatus = null;
                 console.log("Removed token due to error 403");
+                this.statusKnown = true;
                 callback(LOGGED_OUT_STATUS);
                 return
             }
@@ -57,6 +61,11 @@ class AuthManager {
     getStatusIfKnown(): AccountStatus {
         return this.cachedStatus ? this.cachedStatus : LOGGED_OUT_STATUS;
     }
+
+    isStatusKnown() {
+        return this.statusKnown;
+    }
 }
 
 export default new AuthManager()
+export { AccountStatus }
