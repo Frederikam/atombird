@@ -20,7 +20,10 @@ interface AccountRepository : ReactiveCrudRepository<Account, String> {
 }
 
 /** Throws exception if token is invalid */
-fun AccountRepository.findByTokenOrThrow(token: String) = findByToken(token).switchIfEmpty(authFailMono)
+fun AccountRepository.findByTokenOrThrow(token: String?): Mono<Account> {
+    if (token.isNullOrBlank()) return authFailMono;
+    return findByToken(token).switchIfEmpty(authFailMono)
+}
 
 interface TokenRepository : ReactiveCrudRepository<Token, String>
 interface FeedRepository : ReactiveCrudRepository<Feed, String>
