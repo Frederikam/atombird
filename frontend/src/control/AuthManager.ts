@@ -65,6 +65,14 @@ class AuthManager {
     isStatusKnown() {
         return this.statusKnown;
     }
+
+    /** For when we are granted a new token */
+    provideToken(token: string) {
+        localStorage.setItem("token", token);
+        this.getStatus((status: AccountStatus | null) => {
+            if (status && status.isLoggedIn) globals.router.forceNavigate();
+        });
+    }
 }
 
 export default new AuthManager()

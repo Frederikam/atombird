@@ -20,6 +20,6 @@ Navigo.prototype.forceNavigate = function(path: string, absolute?: boolean) {
         this._lastRouteResolved.query = '_=' + Number(new Date());
     }
     this.navigate(path, absolute);
-}
+};
 
 export default new Util()
