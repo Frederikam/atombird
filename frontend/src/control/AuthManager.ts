@@ -40,6 +40,7 @@ class AuthManager {
         }).then(res => {
             this.cachedStatus = new AccountStatus(true, res.data.email);
             this.statusKnown = true;
+            console.log("Auth token is still valid. Logged in as", this.cachedStatus.email);
             callback(this.cachedStatus);
         }).catch(error => {
             console.log(error);
@@ -68,6 +69,7 @@ class AuthManager {
 
     /** For when we are granted a new token */
     provideToken(token: string) {
+        console.log("Received auth token. Checking status...");
         localStorage.setItem("token", token);
         this.getStatus((status: AccountStatus | null) => {
             if (status && status.isLoggedIn) globals.router.forceNavigate();

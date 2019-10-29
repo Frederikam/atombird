@@ -2,6 +2,7 @@ import {html} from 'lit-html';
 import globals from "../globals";
 import axios from 'axios';
 import Util from "../Util";
+import AuthManager from "../control/AuthManager";
 import './auth.sass'
 
 function doRegister(event: Event) {
@@ -15,12 +16,17 @@ function doRegister(event: Event) {
 }
 
 function doLogin(event: Event) {
-    // TODO
     event.preventDefault()
+    let reqBody = getFormValues();
+    let submitButton = document.getElementById("auth-submit") as HTMLInputElement;
+    submitButton.setAttribute("disabled", "true");
+
+    axios.post(globals.accountLoginUrl, reqBody)
+        .then(onAuthenticated, onError)
 }
 
 function onAuthenticated(response: any) {
-    localStorage.setItem("token", response.data.token)
+    AuthManager.provideToken(response.data.token);
 }
 
 function onError(payload: any) {
