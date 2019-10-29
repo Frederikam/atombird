@@ -46,8 +46,8 @@ class AuthManager {
             console.log(error);
             if (error.response && error.response.status === 403) {
                 localStorage.removeItem("token");
-                this.cachedStatus = null;
                 console.log("Removed token due to error 403");
+                this.cachedStatus = null;
                 this.statusKnown = true;
                 callback(LOGGED_OUT_STATUS);
                 return
@@ -74,6 +74,14 @@ class AuthManager {
         this.getStatus((status: AccountStatus | null) => {
             if (status && status.isLoggedIn) globals.router.forceNavigate();
         });
+    }
+
+    logOut() {
+        console.log("Logged out");
+        localStorage.removeItem("token");
+        this.cachedStatus = LOGGED_OUT_STATUS;
+        this.statusKnown = true;
+        globals.router.forceNavigate();
     }
 }
 
