@@ -1,7 +1,7 @@
 body
   font-family: sans-serif
 
-#inner-body
+.inner-body
   display: flex
   flex-direction: column
   justify-content: space-between
@@ -11,15 +11,35 @@ header
   width: 100vw
   background: #151515
   color: #fff
-  #title
+  display: flex
+  justify-content: space-between
+  height: 64px
+  .wordmark
     margin: 0
     padding: 16px
+    line-height: 32px
+  .account-status
+    height: 32px
+    margin: 16px
+  .avatar
+    width: 32px
+    height: 32px
+    border-radius: 4px
+  .log-out-button
+    fill: white
+    transition: fill 200ms
+    margin: 4px
+    width: 24px
+    height: 24px
+    cursor: pointer
+  .log-out-button:hover
+    fill: #aaa
 
 footer
   width: 100vw
   background: #151515
   height: 64px
 
-#content-container
+.content-container
   width: 100vw
   flex-grow: 1

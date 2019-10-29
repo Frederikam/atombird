@@ -22,7 +22,7 @@ globals.router.on("/", () => {
 }).resolve();
 
 function renderLayout(body: TemplateResult | string | null) {
-    render(layout(body), document.body);
+    render(layout(auth.getStatusIfKnown(), body), document.body);
 }
 
 auth.getStatus(status => {
