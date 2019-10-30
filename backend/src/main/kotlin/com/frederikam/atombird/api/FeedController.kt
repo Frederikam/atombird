@@ -23,7 +23,7 @@ class FeedController(
     @PostMapping("/feed/new")
     fun newFeed(@RequestHeader authorization: String, @RequestBody body: NewFeedRequest): Mono<Feed> = accounts
             .findByTokenOrThrow(authorization)
-            .flatMap { feedFetcher.fetchNewFeed(it.email, body.url, body.tags) }
+            .flatMap { feedFetcher.fetchNewFeed(it, body.url, body.tags) }
             .flatMap { feeds.save(it) }
 
 }

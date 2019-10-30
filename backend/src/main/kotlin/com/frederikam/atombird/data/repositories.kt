@@ -9,7 +9,6 @@ import org.springframework.data.r2dbc.repository.query.Query
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
-import java.nio.ByteBuffer
 import java.time.Instant
 
 val authFailMono = Mono.error<Account>(AccountController.InvalidCredentialsException())
@@ -88,5 +87,5 @@ class Entry(
         val authorName: String?,
         val authorEmail: String?,
         val authorUrl: String?,
-        var read: Boolean
+        var read: Boolean?
 )
