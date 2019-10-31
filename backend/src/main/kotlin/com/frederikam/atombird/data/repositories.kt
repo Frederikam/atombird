@@ -8,6 +8,7 @@ import org.springframework.data.domain.Persistable
 import org.springframework.data.r2dbc.repository.query.Query
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
 import org.springframework.stereotype.Component
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.time.Instant
 
@@ -25,8 +26,26 @@ fun AccountRepository.findByTokenOrThrow(token: String?): Mono<Account> {
 }
 
 interface TokenRepository : ReactiveCrudRepository<Token, String>
-interface FeedRepository : ReactiveCrudRepository<Feed, String>
-interface EntryRepository : ReactiveCrudRepository<Entry, String>
+
+interface FeedRepository : ReactiveCrudRepository<Feed, Long> {
+    @Query("SELECT * FROM feed WHERE user_id LIKE :user;")
+    fun findAllByUser(user: String)
+}
+
+interface EntryRepository : ReactiveCrudRepository<Entry, Long> {
+    @Query("""
+SELECT * FROM entry 
+WHERE feed_id IN :feeds 
+ORDER BY time DESC 
+LIMIT :limit OFFSET :offset;""")
+    fun findAllByFeeds(feeds: Array<String>, limit: Int = 30, offset: Int = 0): Flux<Entry>
+    @Query("""
+SELECT * FROM entry 
+WHERE feed_id IN (SELECT feed.id FROM feed WHERE feed.user_id LIKE :userId) 
+ORDER BY time DESC 
+LIMIT :limit OFFSET :offset;""")
+    fun findAllByAccount(userId: String, limit: Int = 30, offset: Int = 0): Flux<Entry>
+}
 
 @Component
 class Repositories(accounts: AccountRepository, tokens: TokenRepository)
