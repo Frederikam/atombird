@@ -17,10 +17,8 @@ class StreamController(
         private val accountRepository: AccountRepository,
         private val entryRepository: EntryRepository
 ) {
-
     @GetMapping("/stream")
     fun get(@RequestHeader authorization: String): Flux<Entry> = accountRepository
             .findByTokenOrThrow(authorization)
             .flatMapMany { entryRepository.findAllByAccount(it.id) }
-
 }

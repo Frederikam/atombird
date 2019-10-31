@@ -8,14 +8,18 @@ import org.apache.commons.validator.routines.EmailValidator
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
 import java.security.SecureRandom
 import java.util.*
-import javax.crypto.spec.PBEKeySpec
 import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.PBEKeySpec
 
 
 @RestController
@@ -69,6 +73,8 @@ class AccountController(val accounts: AccountRepository, val tokens: TokenReposi
             .flatMap {
                 if (hashPassword(body.password, it.salt) != it.hash) throw InvalidCredentialsException()
                 assignNewToken(it)
+            }.doOnSuccess {
+                log.info("Successful login from ${body.email}")
             }
 
     fun assignNewToken(account: Account): Mono<Token> {

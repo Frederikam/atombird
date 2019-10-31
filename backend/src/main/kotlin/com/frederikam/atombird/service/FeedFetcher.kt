@@ -93,6 +93,7 @@ class FeedFetcher(private val feeds: FeedRepository, private val entryRepository
                 newData.description?.type,
                 newData.contents.firstOrNull()?.type,
                 newData.authors.firstOrNull()?.name,
+                null,
                 newData.authors.firstOrNull()?.email,
                 newData.authors.firstOrNull()?.uri,
                 oldData?.read ?: false

@@ -104,6 +104,7 @@ class Entry(
         val titleType: String?,
         val summaryType: String?,
         val contentType: String?,
+        val imageUrl: String?,
         val authorName: String?,
         val authorEmail: String?,
         val authorUrl: String?,
