@@ -81,7 +81,7 @@ class AuthManager {
         localStorage.removeItem("token");
         this.cachedStatus = LOGGED_OUT_STATUS;
         this.statusKnown = true;
-        globals.router.forceNavigate();
+        globals.router.navigate("/login");
     }
 }
 

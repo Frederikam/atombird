@@ -21,16 +21,15 @@ const requireLoggedIn = {
     before: function (done: any, params: any) {
         if (auth.isStatusKnown() && !auth.getStatusIfKnown().isLoggedIn) {
             done(false);
-            console.log("Navigating to root / because we are logged out");
-            globals.router.navigate("/", true)
+            console.log("Navigating to /login because we are logged out");
+            globals.router.navigate("/login", true)
         } else {
             done()
         }
     }
 };
 
-globals.router.on(() => {
-    console.log("/");
+globals.router.on("/", () => {
     if (auth.isStatusKnown()) {
         renderLayout(index(auth.getStatusIfKnown(), true));
     } else {
@@ -47,8 +46,7 @@ globals.router.on(() => {
     .notFound(() => {
         console.log("Landed on 404 page");
         renderLayout("404. Nothing here.")
-    })
-    .resolve();
+    }).resolve();
 
 function renderLayout(body: TemplateResult | string | null) {
     render(layout(auth.getStatusIfKnown(), body), document.body);

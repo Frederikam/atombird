@@ -16,7 +16,7 @@ function doRegister(event: Event) {
 }
 
 function doLogin(event: Event) {
-    event.preventDefault()
+    event.preventDefault();
     let reqBody = getFormValues();
     let submitButton = document.getElementById("auth-submit") as HTMLInputElement;
     submitButton.setAttribute("disabled", "true");
