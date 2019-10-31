@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
-import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.time.Duration
 import java.time.Instant
@@ -69,21 +68,22 @@ class FeedFetcher(private val feeds: FeedRepository, private val entryRepository
             )
         }
 
-        val entryFlux = if (oldData == null) {
-            entryRepository.saveAll(newData.entries.map { entryToEntity(null, it) })
-        } else {
-            Flux.empty() // TODO: Handle re-fetches
-        }
+        return feeds.save(newEntity).doOnSuccess { feed ->
+            if (oldData == null) {
+                entryRepository.saveAll(newData.entries.map { entryToEntity(null, it, feed.id!!) })
+                        .subscribe { log.info("Saved entry: {}", it.nativeId) }
+                return@doOnSuccess
+            }
 
-        return feeds.save(newEntity).doOnSubscribe {
-            entryFlux.subscribe { log.info("Saved entry: {}", it.nativeId) }
+            // TODO: Handle re-fetches
         }
     }
 
-    private fun entryToEntity(oldData: Entry?, newData: SyndEntry) = newData.run {
+    private fun entryToEntity(oldData: Entry?, newData: SyndEntry, feedId: Long) = newData.run {
         Entry(
                 oldData?.id,
-                newData.uri,
+                feedId,
+                newData.uri ?: newData.links.first().href,
                 newData.updatedDate?.toInstant() ?: newData.publishedDate?.toInstant(),
                 newData.link,
                 newData.title,

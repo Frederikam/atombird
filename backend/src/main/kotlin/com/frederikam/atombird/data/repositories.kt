@@ -94,6 +94,7 @@ class Feed(
 
 class Entry(
         @Id var id: Long?,
+        val feedId: Long,
         val nativeId: String,
         val time: Instant?,
         val url: String?,
