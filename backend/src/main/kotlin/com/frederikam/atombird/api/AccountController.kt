@@ -71,8 +71,8 @@ class AccountController(val accounts: AccountRepository, val tokens: TokenReposi
     fun login(@RequestBody body: LoginRequest) = accounts
             .findById(body.email)
             .flatMap {
-                if (hashPassword(body.password, it.salt) != it.hash) throw InvalidCredentialsException()
-                assignNewToken(it)
+                if (hashPassword(body.password, it.salt) != it.hash) Mono.error(InvalidCredentialsException())
+                else assignNewToken(it)
             }.doOnSuccess {
                 log.info("Successful login from ${body.email}")
             }

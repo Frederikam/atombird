@@ -1,10 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+
+
 plugins {
     id("org.springframework.boot") version "2.2.0.BUILD-SNAPSHOT"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
-    kotlin("jvm") version "1.3.50"
-    kotlin("plugin.spring") version "1.3.50"
+    kotlin("jvm") version "1.3.70"
+    kotlin("plugin.spring") version "1.3.70"
 }
 
 group = "com.frederikam"
@@ -13,8 +15,9 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 
 val commonsValidatorVersion = "1.6"
 val romeVersion = "1.12.1"
-val kotlinReactorExtensionsVersion = "1.0.0.M1"
+val kotlinReactorExtensionsVersion = "1.0.2.RELEASE"
 val fuelVersion = "2.2.1"
+val kotlinVersion = "1.3.70"
 
 repositories {
     mavenCentral()
@@ -31,7 +34,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.3.5")
     implementation("com.google.code.gson:gson")
     implementation("commons-validator:commons-validator:$commonsValidatorVersion")
     implementation("com.rometools:rome:$romeVersion")
