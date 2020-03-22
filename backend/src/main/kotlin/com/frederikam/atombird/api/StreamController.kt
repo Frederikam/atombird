@@ -6,6 +6,7 @@ import com.frederikam.atombird.data.EntryRepository
 import com.frederikam.atombird.data.findByTokenOrThrow
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Flux
 
@@ -18,7 +19,11 @@ class StreamController(
         private val entryRepository: EntryRepository
 ) {
     @GetMapping("/stream")
-    fun get(@RequestHeader authorization: String): Flux<Entry> = accountRepository
+    fun get(
+            @RequestHeader authorization: String,
+            @RequestParam(defaultValue = "0") limit: Int,
+            @RequestParam(defaultValue = "20") offset: Int
+    ): Flux<Entry> = accountRepository
             .findByTokenOrThrow(authorization)
-            .flatMapMany { entryRepository.findAllByAccount(it.id) }
+            .flatMapMany { entryRepository.findAllByAccount(it.id, limit, offset) }
 }
