@@ -4,6 +4,7 @@ import index from './pages/index';
 import 'normalize.css'
 import globals from "./globals"
 import auth from "./control/AuthManager"
+import stream from "./pages/stream";
 
 const requireLoggedOut = {
     before: function (done: any, params: any) {
@@ -43,6 +44,9 @@ globals.router.on("/", () => {
             renderLayout(null);
         }
     }, requireLoggedOut)
+    .on("/stream", () => {
+        renderLayout(stream());
+    }, requireLoggedIn)
     .notFound(() => {
         console.log("Landed on 404 page");
         renderLayout("404. Nothing here.")

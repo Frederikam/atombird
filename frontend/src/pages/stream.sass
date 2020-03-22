@@ -1,0 +1,25 @@
+$largeBreak: 1600px
+
+$minMarginWidth: 200px
+$marginGrowthFactor: 30
+
+.stream
+  display: flex
+  flex-wrap: nowrap
+  justify-content: center
+  height: 100%
+  width: 100vw
+  .stream-margin-left
+    background: lightpink
+    min-width: $minMarginWidth
+    flex-grow: $marginGrowthFactor
+  .stream-margin-right
+    background: lightskyblue
+    min-width: $minMarginWidth
+    flex-grow: $marginGrowthFactor
+    @media (max-width: $largeBreak)
+      display: none
+  .stream-main
+    flex-grow: 100
+    @media (min-width: $largeBreak)
+      flex-grow: 150
