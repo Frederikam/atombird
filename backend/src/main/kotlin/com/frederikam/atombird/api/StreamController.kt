@@ -21,8 +21,8 @@ class StreamController(
     @GetMapping("/stream")
     fun get(
             @RequestHeader authorization: String,
-            @RequestParam(defaultValue = "0") limit: Int,
-            @RequestParam(defaultValue = "20") offset: Int
+            @RequestParam(defaultValue = "20") limit: Int,
+            @RequestParam(defaultValue = "0") offset: Int
     ): Flux<Entry> = accountRepository
             .findByTokenOrThrow(authorization)
             .flatMapMany { entryRepository.findAllByAccount(it.id, limit, offset) }
