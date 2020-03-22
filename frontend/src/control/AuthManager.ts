@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "./Api";
 import globals from "../globals";
 
 class AccountStatus {
@@ -35,9 +35,7 @@ class AuthManager {
             return;
         }
 
-        axios.get(globals.accountStatusUrl, {
-            headers: {Authorization: token}
-        }).then(res => {
+        api.getStatus().then(res => {
             this.cachedStatus = new AccountStatus(true, res.data.email);
             this.statusKnown = true;
             console.log("Auth token is still valid. Logged in as", this.cachedStatus.email);

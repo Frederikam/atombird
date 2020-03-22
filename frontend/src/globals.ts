@@ -8,4 +8,5 @@ export default {
     accountRegisterUrl: apiBaseUrl + "account/register",
     accountLoginUrl: apiBaseUrl + "account/login",
     accountStatusUrl: apiBaseUrl + "account/status",
+    entriesUrl: apiBaseUrl + "stream",
 }
