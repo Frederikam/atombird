@@ -9,22 +9,33 @@ class Api {
         });
     }
 
-    getEntries(): Promise<Array<Entry>> {
-        return new Promise<Array<Entry>>((resolve, reject) => {
-            axios.get(globals.entriesUrl, {
-                headers: {Authorization: localStorage.getItem("token")}
-            })
-                .catch((e) => reject(e))
-                .then((request) => {
-                    // @ts-ignore
-                    resolve(request.data)
-                })
-        });
+    async getEntries(): Promise<Array<Entry>> {
+        const r = await axios.get(globals.entriesUrl, { headers: {
+                Authorization: localStorage.getItem("token"),
+            }});
+
+        return r.data;
     }
 
 }
 
-class Entry {
+interface Entry {
+    id: Number
+    feedId: Number
+    nativeId: String
+    time: String
+    url: String
+    title: String
+    summary: String
+    content: String
+    titleType: String
+    summaryType: String
+    contentType: String
+    imageUrl: String
+    authorName: String
+    authorEmail: String
+    authorUrl: String
+    read: Boolean
 }
 
 export default new Api();

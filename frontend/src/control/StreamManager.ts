@@ -1,3 +1,5 @@
+import Api from "./Api";
+
 class StreamManager {
     startedLoading = false;
     isLoading = false;
@@ -5,6 +7,7 @@ class StreamManager {
     startLoading() {
         this.startedLoading = true;
         this.isLoading = true;
+        Api.getEntries().then(value => console.log(value))
     }
 }
 
