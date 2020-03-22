@@ -1,10 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
-
 plugins {
-    id("org.springframework.boot") version "2.2.0.BUILD-SNAPSHOT"
-    id("io.spring.dependency-management") version "1.0.8.RELEASE"
+    id("org.springframework.boot") version "2.3.0.M3"
+    id("io.spring.dependency-management") version "1.0.9.RELEASE"
     kotlin("jvm") version "1.3.70"
     kotlin("plugin.spring") version "1.3.70"
 }
@@ -28,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot.experimental:spring-boot-starter-data-r2dbc")
+    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -46,7 +45,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
-    testImplementation("org.springframework.boot.experimental:spring-boot-test-autoconfigure-r2dbc")
     testImplementation("io.projectreactor:reactor-test")
 }
 
