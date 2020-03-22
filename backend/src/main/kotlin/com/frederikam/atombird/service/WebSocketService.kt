@@ -3,10 +3,10 @@ package com.frederikam.atombird.service
 import com.frederikam.atombird.data.AccountRepository
 import com.frederikam.atombird.data.AuthSuccess
 import com.frederikam.atombird.data.CLOSE_STATUS_AUTH_ERROR
-import com.frederikam.atombird.data.ClientSession
+import com.frederikam.atombird.data.UserSession
 import com.frederikam.atombird.data.Operation
-import com.frederikam.atombird.data.Response
 import com.frederikam.atombird.data.WsWrapper
+import com.google.common.collect.ArrayListMultimap
 import com.google.gson.Gson
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -17,8 +17,6 @@ import org.springframework.web.reactive.socket.WebSocketMessage
 import org.springframework.web.reactive.socket.WebSocketSession
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.CopyOnWriteArrayList
 
 
 @Service
@@ -26,12 +24,10 @@ class WebSocketService(private val accountRepository: AccountRepository) : WebSo
 
     private val log: Logger = LoggerFactory.getLogger(WebSocketService::class.java)
     private val gson = Gson()
-    private val activeSessions = ConcurrentHashMap<String, Sessions>()
+    private val activeSessions = ArrayListMultimap.create<String, UserSession>()
 
     override fun handle(session: WebSocketSession): Mono<Void> {
-        val token = session.handshakeInfo.headers.getFirst("Authorization")
-
-        lateinit var clSession: ClientSession
+        lateinit var clSession: UserSession
         val input = session.receive().doOnNext { message ->
             if (clSession.isAuthenticated) {
                 handleMessage(clSession, message)
@@ -49,7 +45,7 @@ class WebSocketService(private val accountRepository: AccountRepository) : WebSo
         }
 
         val output = Flux.create<WebSocketMessage> { sink ->
-            clSession = ClientSession(session, sink)
+            clSession = UserSession(session, sink)
         }
 
         return session.send(output)
@@ -57,7 +53,7 @@ class WebSocketService(private val accountRepository: AccountRepository) : WebSo
                 .doFinally { onClose(clSession) }
     }
 
-    private fun handlePreAuthMessage(session: ClientSession, message: WebSocketMessage) {
+    private fun handlePreAuthMessage(session: UserSession, message: WebSocketMessage) {
         val wrapper = gson.fromJson(message.payloadAsText, WsWrapper::class.java)
         check(wrapper.opEnum == Operation.AUTH_REQUEST) {
             "Expected ${Operation.AUTH_REQUEST} but got ${wrapper.opEnum} during pre-auth"
@@ -72,39 +68,19 @@ class WebSocketService(private val accountRepository: AccountRepository) : WebSo
         }
     }
 
-    private fun onSessionAuth(session: ClientSession) {
+    private fun onSessionAuth(session: UserSession) {
         log.info("Accepted: {}", session)
-        activeSessions.compute(session.email) { _, sessions ->
-            if (sessions == null) {
-                return@compute Sessions().apply { list.add(session) }
-            } else {
-                sessions.list.add(session)
-                sessions
-            }
-        }
+        activeSessions.put(session.email, session)
         session.send(AuthSuccess())
     }
 
-    private fun onClose(session: ClientSession) {
+    private fun onClose(session: UserSession) {
         log.info("Closed: {}", session)
         if (!session.isAuthenticated) return
-        activeSessions.computeIfPresent(session.email) { _, sessions ->
-            sessions.list.remove(session);
-            return@computeIfPresent if (sessions.list.isEmpty()) null else sessions
-        }
+        activeSessions.remove(session.email, session)
     }
 
-    private fun handleMessage(session: ClientSession, message: WebSocketMessage) {
+    private fun handleMessage(session: UserSession, message: WebSocketMessage) {
         log.info("Client sent message: {}", message)
-    }
-
-    class Sessions {
-        val list = CopyOnWriteArrayList<ClientSession>()
-
-        fun sendAll(response: Response) = list.forEach { it.send(response) }
-        fun closeAll(status: CloseStatus): Mono<Void> {
-            val ops = list.map { it.close(status) }.toTypedArray()
-            return Flux.concatDelayError(*ops).then()
-        }
     }
 }

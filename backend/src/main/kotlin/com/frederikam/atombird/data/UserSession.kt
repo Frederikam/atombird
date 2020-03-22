@@ -9,12 +9,12 @@ import org.springframework.web.reactive.socket.WebSocketSession
 import reactor.core.publisher.FluxSink
 import java.util.concurrent.atomic.AtomicLong
 
-class ClientSession(
+class UserSession(
         private val raw: WebSocketSession,
         private val sink: FluxSink<WebSocketMessage>
 ) {
     companion object {
-        private val log: Logger = LoggerFactory.getLogger(ClientSession::class.java)
+        private val log: Logger = LoggerFactory.getLogger(UserSession::class.java)
         private val gson = Gson();
         private val counter = AtomicLong(0);
     }
