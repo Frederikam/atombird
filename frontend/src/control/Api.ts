@@ -1,16 +1,18 @@
 import axios, {AxiosResponse} from "axios";
 import globals from "../globals";
+import {AccountStatus} from "./AuthManager";
 
 class Api {
 
-    getStatus(): Promise<AxiosResponse<any>> {
-        return axios.get(globals.accountStatusUrl, {
+    async getStatus(): Promise<AccountStatus> {
+        const res = await axios.get(globals.apiBaseUrl + "account/status", {
             headers: {Authorization: localStorage.getItem("token")}
         });
+        return new AccountStatus(true, res.data.email);
     }
 
     async getEntries(): Promise<Array<Entry>> {
-        const r = await axios.get(globals.entriesUrl, { headers: {
+        const r = await axios.get(globals.apiBaseUrl + "stream", { headers: {
                 Authorization: localStorage.getItem("token"),
             }});
 

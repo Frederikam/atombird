@@ -34,8 +34,7 @@ class AuthManager {
         }
 
         try {
-            const res = await api.getStatus();
-            this.cachedStatus = new AccountStatus(true, res.data.email);
+            this.cachedStatus = await api.getStatus();
             this.statusKnown = true;
             console.log("Auth token is still valid. Logged in as", this.cachedStatus.email);
             return this.cachedStatus;
