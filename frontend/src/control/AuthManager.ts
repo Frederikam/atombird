@@ -63,10 +63,9 @@ class AuthManager {
     }
 
     /** For when we are granted a new token */
-    async provideToken(token: string) {
+    provideToken(token: string) {
         console.log("Received auth token. Checking status...");
         localStorage.setItem("token", token);
-        const status = await this.getStatus();
         this.getStatus().then(status => {
             if (status && status.isLoggedIn) globals.router.forceNavigate();
         });
