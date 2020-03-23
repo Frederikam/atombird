@@ -56,6 +56,6 @@ function renderLayout(body: TemplateResult | string | null) {
     render(layout(auth.getStatusIfKnown(), body), document.body);
 }
 
-auth.getStatus(status => {
+auth.getStatus().then(value => {
     globals.router.forceNavigate(window.location.pathname, true)
 });

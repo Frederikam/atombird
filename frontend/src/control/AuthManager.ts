@@ -21,37 +21,35 @@ class AuthManager {
      * Determines the account status and returns it via the given callback.
      * If the callback receives null it means that the check failed, and that we may still be logged in.
      */
-    getStatus(callback: (status: AccountStatus | null) => void) {
+    async getStatus(): Promise<AccountStatus | null> {
         if (this.cachedStatus && this.cachedStatus.isLoggedIn) {
-            callback(this.cachedStatus);
-            return;
+            return this.cachedStatus;
         }
 
         let token = localStorage.getItem("token");
 
         if (token == null) {
             this.statusKnown = true;
-            callback(LOGGED_OUT_STATUS);
-            return;
+            return LOGGED_OUT_STATUS;
         }
 
-        api.getStatus().then(res => {
+        try {
+            const res = await api.getStatus();
             this.cachedStatus = new AccountStatus(true, res.data.email);
             this.statusKnown = true;
             console.log("Auth token is still valid. Logged in as", this.cachedStatus.email);
-            callback(this.cachedStatus);
-        }).catch(error => {
+            return this.cachedStatus;
+        } catch (error) {
             console.log(error);
             if (error.response && error.response.status === 403) {
                 localStorage.removeItem("token");
                 console.log("Removed token due to error 403");
                 this.cachedStatus = null;
                 this.statusKnown = true;
-                callback(LOGGED_OUT_STATUS);
-                return
+                return LOGGED_OUT_STATUS;
             }
-            callback(null)
-        })
+            return null;
+        }
     }
 
     /**
@@ -66,10 +64,11 @@ class AuthManager {
     }
 
     /** For when we are granted a new token */
-    provideToken(token: string) {
+    async provideToken(token: string) {
         console.log("Received auth token. Checking status...");
         localStorage.setItem("token", token);
-        this.getStatus((status: AccountStatus | null) => {
+        const status = await this.getStatus();
+        this.getStatus().then(status => {
             if (status && status.isLoggedIn) globals.router.forceNavigate();
         });
     }
@@ -84,4 +83,4 @@ class AuthManager {
 }
 
 export default new AuthManager()
-export { AccountStatus }
+export {AccountStatus}
