@@ -4,8 +4,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.3.0.M3"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
-    kotlin("jvm") version "1.3.70"
-    kotlin("plugin.spring") version "1.3.70"
+    kotlin("jvm") version "1.3.71"
+    kotlin("plugin.spring") version "1.3.71"
 }
 
 group = "com.frederikam"
@@ -16,7 +16,7 @@ val commonsValidatorVersion = "1.6"
 val romeVersion = "1.12.1"
 val kotlinReactorExtensionsVersion = "1.0.2.RELEASE"
 val fuelVersion = "2.2.1"
-val kotlinVersion = "1.3.70"
+val kotlinVersion = "1.3.71"
 
 repositories {
     mavenCentral()
