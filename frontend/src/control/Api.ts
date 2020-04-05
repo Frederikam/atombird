@@ -1,4 +1,4 @@
-import axios, {AxiosResponse} from "axios";
+import axios from "axios";
 import globals from "../globals";
 import {AccountStatus} from "./AuthManager";
 
@@ -12,16 +12,16 @@ class Api {
     }
 
     async getEntries(): Promise<Array<Entry>> {
-        const r = await axios.get(globals.apiBaseUrl + "stream", { headers: {
-                Authorization: localStorage.getItem("token"),
-            }});
+        const r = await axios.get(globals.apiBaseUrl + "stream", {
+            headers: {Authorization: localStorage.getItem("token")}
+        });
 
         return r.data;
     }
 
 }
 
-interface Entry {
+export interface Entry {
     id: Number
     feedId: Number
     nativeId: String

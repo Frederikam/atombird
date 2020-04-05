@@ -8,10 +8,16 @@ function streamMain() {
         <div class="stream-main">
             <h1>Loading...</h1>
         </div>`
+    } else if (StreamManager.loadError != null) {
+        return html`
+        <div class="stream-main">
+            <h1>${StreamManager.loadError}</h1>
+        </div>`
     }
 
     return html`
     <div class="stream-main">
+        ${StreamManager.entries.map(e => html`<p>${e.url}</p>`)}
     </div>`
 }
 
@@ -25,7 +31,8 @@ function streamSidebar() {
 }
 
 export default () => {
-    if (!StreamManager.startedLoading) StreamManager.startLoading();
+    // noinspection JSIgnoredPromiseFromCall
+    if (!StreamManager.startedLoading) StreamManager.load();
 
     return html`
     <div class="stream">
